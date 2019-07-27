@@ -1,0 +1,31 @@
+*.class
+*~
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+build/
+!/gradle/**/*
+logs/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# VSCode
+.vscode/
+
+# General test run stuff
+run/

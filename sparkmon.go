@@ -35,7 +35,7 @@ func main() {
 
 	for {
 		select {
-		case e := <- uiEvents:
+		case e := <-uiEvents:
 			switch e.ID {
 			case "r":
 				state = computeState(host)
@@ -48,7 +48,7 @@ func main() {
 				termHeight = payload.Height
 				render(termWidth, termHeight, state)
 			}
-		case <- ticker:
+		case <-ticker:
 			state = computeState(host)
 			render(termWidth, termHeight, state)
 		}
@@ -64,7 +64,7 @@ func render(width, height int, state State) {
 	clusterInfo.Border = false
 	clusterInfo.TextStyle.Modifier = ui.ModifierBold
 	clusterInfo.Text = fmt.Sprintf("Running against Spark on %v", state.Host)
-	clusterInfo.SetRect(0, 0, width, currentHeight + 1)
+	clusterInfo.SetRect(0, 0, width, currentHeight+1)
 	drawables = append(drawables, clusterInfo)
 
 	currentHeight += 2
@@ -99,10 +99,10 @@ func render(width, height int, state State) {
 				label.Border = false
 				labelText := fmt.Sprintf("%v %v: %v", stage.Index, stage.Status, stage.Name)
 				if len(labelText) > labelWidth {
-					labelText = labelText[:labelWidth - 3] + "..."
+					labelText = labelText[:labelWidth-3] + "..."
 				}
 				label.Text = labelText
-				label.SetRect(2, currentHeight + currentInternalHeight, labelWidth, currentHeight + currentInternalHeight + 1)
+				label.SetRect(2, currentHeight+currentInternalHeight, labelWidth, currentHeight+currentInternalHeight+1)
 
 				// Stage progress bar
 				bar := widgets.NewGauge()
@@ -113,7 +113,7 @@ func render(width, height int, state State) {
 					bar.Label = fmt.Sprintf("%v/%v (%v active)", stage.CompletedTasks, stage.Tasks, stage.ActiveTasks)
 				}
 				bar.Percent = int(math.Ceil((float64(stage.CompletedTasks) / float64(stage.Tasks)) * 100))
-				bar.SetRect(labelWidth, currentHeight + currentInternalHeight, width - 2, currentHeight + currentInternalHeight + 1)
+				bar.SetRect(labelWidth, currentHeight+currentInternalHeight, width-2, currentHeight+currentInternalHeight+1)
 
 				currentInternalHeight += 1
 
@@ -130,7 +130,7 @@ func render(width, height int, state State) {
 				details.TextStyle.Modifier = ui.ModifierClear
 				details.TextStyle.Fg = ui.ColorRed
 				details.Text = detailsText
-				details.SetRect(2, currentHeight + currentInternalHeight, width - 2, currentHeight + currentInternalHeight + 1)
+				details.SetRect(2, currentHeight+currentInternalHeight, width-2, currentHeight+currentInternalHeight+1)
 
 				currentInternalHeight += 1
 
@@ -139,11 +139,11 @@ func render(width, height int, state State) {
 
 			currentInternalHeight += 1
 			// -1 width to fit in root
-			jobBlock.SetRect(1, currentHeight + initialHeight, width - 1, currentHeight + currentInternalHeight)
+			jobBlock.SetRect(1, currentHeight+initialHeight, width-1, currentHeight+currentInternalHeight)
 		}
 
 		// +1 for root block bottom border
-		root.SetRect(0, currentHeight, width, currentHeight + currentInternalHeight + 1)
+		root.SetRect(0, currentHeight, width, currentHeight+currentInternalHeight+1)
 		currentHeight += currentInternalHeight + 1
 	}
 
@@ -228,27 +228,27 @@ func readApiEndpoint(host string, endpoint string, out interface{}) {
 }
 
 type ApplicationIdAndName struct {
-	Id string 	`json:"id"`
+	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type Job struct {
-	Index int 			`json:"jobId"`
-	Name string 		`json:"name"`
-	Stages []int 		`json:"stageIds"`
-	Status string 		`json:"status"`
+	Index  int    `json:"jobId"`
+	Name   string `json:"name"`
+	Stages []int  `json:"stageIds"`
+	Status string `json:"status"`
 }
 
 type Stage struct {
-	Index int 			`json:"stageId"`
-	Name string			`json:"name"`
-	Details string		`json:"details"`
-	Status string 		`json:"status"`
-	Tasks int 			`json:"numTasks"`
-	ActiveTasks int 	`json:"numActiveTasks"`
-	CompletedTasks int 	`json:"numCompleteTasks"`
-	FailedTasks int 	`json:"numFailedTasks"`
-	KilledTasks int 	`json:"numKilledTasks"`
+	Index          int    `json:"stageId"`
+	Name           string `json:"name"`
+	Details        string `json:"details"`
+	Status         string `json:"status"`
+	Tasks          int    `json:"numTasks"`
+	ActiveTasks    int    `json:"numActiveTasks"`
+	CompletedTasks int    `json:"numCompleteTasks"`
+	FailedTasks    int    `json:"numFailedTasks"`
+	KilledTasks    int    `json:"numKilledTasks"`
 }
 
 type State struct {
@@ -257,11 +257,11 @@ type State struct {
 }
 
 type EnrichedApplication struct {
-	App ApplicationIdAndName
+	App  ApplicationIdAndName
 	Jobs []EnrichedJob
 }
 
 type EnrichedJob struct {
-	Job Job
+	Job    Job
 	Stages []Stage
 }
